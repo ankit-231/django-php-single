@@ -94,4 +94,9 @@ def hash_password_bcrypt(password):
     salt = bcrypt.gensalt()
     # Hash the password
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed_password
+
+    # Convert the hashed bytes to a string for storage
+    final_hashed_password = hashed_password.decode('utf-8')
+    db_hashcode = "$2y$10$A/23JxVIwCQKRZXWhxBddesw/QdczbFZ1buXhw8H/qR/pfDmpiHr."
+    print(bcrypt.checkpw(final_hashed_password, db_hashcode.encode('utf-8')))
+    return final_hashed_password
