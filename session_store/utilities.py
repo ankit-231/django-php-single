@@ -1,6 +1,8 @@
 from core.models import Sessions, Users
 import datetime
 from django.conf import settings
+import bcrypt
+from decouple import config
 
 
 def get_user_from_session_key(request):
@@ -25,3 +27,30 @@ def get_user_from_session_key(request):
     user = Users.objects.filter().last() if user_id else None
 
     return user
+
+
+class Auth:
+
+    def get_app_key():
+        key = config("APP_KEY")
+        if not key:
+            raise ValueError("APP_KEY not configured properly")
+        return key
+
+    @classmethod
+    def create_hash(cls, password):
+        password = b"dsadsa"
+        salt = cls.get_app_key()
+        hashed = bcrypt.hashpw(password, salt)
+        return hashed
+
+    @classmethod
+    def check_password(cls, user: Users, password: str):
+        hashed = cls.create_hash(password)
+        return bcrypt.checkpw(password, hashed)
+
+    @classmethod
+    def set_password(cls, user: Users, password: str):
+        hashed = cls.create_hash(password)
+        user.password = hashed
+        # user.save()
