@@ -134,9 +134,9 @@ class AuthenticationMiddleware(MiddlewareMixin):
                 Create a custom session middleware or use the default middleware. Anyway provide session property to request before this middleware is run
                 """
             )
-        print("of course")
+        # print("of course")
         user = get_user_from_session_key(request)
 
-        print(user, "ssssssss")
+        # print(user, "ssssssss")
 
         request.user = user if user else CustomAnonymousUser

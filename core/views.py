@@ -25,7 +25,7 @@ def index(request):
         user_name = request.user.name
         # print(user_name,"user_name")
         password = request.user.password
-        print(password, "password")
+        # print(password, "password")
     
     users = Users.objects.all()
     # print(users)
@@ -33,18 +33,23 @@ def index(request):
     # resp.set_cookie("test", "test", httponly=True)
     # # resp.cookies
     # resp.set_cookie("laravel_session", "4c0811115a1c50f26b5fc8671904cf7c6b5975a1")
-    print(request.COOKIES)
-    password = "Minbhawan@44"
-    user = Users.objects.get(id=3)
-    auth = Auth
-    is_ok = auth.check_password(user=user, password=password)
-    print(is_ok, "hash")
-    data_ = {"is_ok": is_ok}
+    # print(request.COOKIES)
+    # password = "Minbhawan@44"
+    # user = Users.objects.get(id=3)
+    # auth = Auth
+    # is_ok = auth.check_password(user=user, password=password)
+    # print(is_ok, "hash")
+    data_ = {"is_ok": "is_ok"}
     resp = render(
         request,
         "index.html",
         context={"request": request, "user_data": user_data, "user_name": user_name, "data": data_},
     )
+
+    user_agent = request.META['HTTP_USER_AGENT']
+    print(user_agent, "user_agent")
+
+
     return resp
 
 

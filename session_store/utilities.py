@@ -14,14 +14,14 @@ def get_user_from_session_key(request):
     session = (
         Sessions.objects.filter(session_key=session_id).last() if session_id else None
     )
-    print(session, "session")
+    # print(session, "session")
     today = datetime.datetime.now()
-    print(session.expire_date, today)
+    # print(session.expire_date, today)
 
     is_expired = session.expire_date < today
     if is_expired:
         return None
-    print(is_expired)
+    # print(is_expired)
     user_id = session.user_id if session else None
 
     user = Users.objects.filter().last() if user_id else None
@@ -51,7 +51,7 @@ class Auth:
     @classmethod
     def check_password(cls, user: Users, password: str):
         user_password = user.password.encode("utf-8")
-        print(user_password, "utf-8utf-8")
+        # print(user_password, "utf-8utf-8")
         to_byte = cls.byte_password(password)
         return bcrypt.checkpw(to_byte, user_password)
 
@@ -81,7 +81,7 @@ class Auth:
 
 
 def get_is_authenticated(request):
-    print(request.user, "heheh")
+    # print(request.user, "heheh")
     if request.user:
         if isinstance(request.user, Users):
             return True
@@ -98,5 +98,5 @@ def hash_password_bcrypt(password):
     # Convert the hashed bytes to a string for storage
     final_hashed_password = hashed_password.decode('utf-8')
     db_hashcode = "$2y$10$A/23JxVIwCQKRZXWhxBddesw/QdczbFZ1buXhw8H/qR/pfDmpiHr."
-    print(bcrypt.checkpw(final_hashed_password, db_hashcode.encode('utf-8')))
+    # print(bcrypt.checkpw(final_hashed_password, db_hashcode.encode('utf-8')))
     return final_hashed_password
