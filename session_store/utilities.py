@@ -54,3 +54,17 @@ class Auth:
         hashed = cls.create_hash(password)
         user.password = hashed
         # user.save()
+def get_is_authenticated(request):
+    print(request.user, "heheh")
+    if request.user:
+        if isinstance(request.user, Users):
+            return True
+        
+    return False
+        
+def hash_password_bcrypt(password):
+    # Generate a salt
+    salt = bcrypt.gensalt()
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password

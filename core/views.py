@@ -6,14 +6,22 @@ from core.models import Users
 from session_store.utilities import Auth
 
 # from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate
 
+from session_store.utilities import get_is_authenticated, hash_password_bcrypt
 # Create your views here.
 
 def index(request):
     # user = authenticate(request, username="admin", password="admin")
     # print(user)
     # print(request.user)
-    resp = render(request, "index.html", context={"request": request})
+    if get_is_authenticated(request):
+        user_data = "you are authenticated"
+        user_name = request.user.name
+        # print(user_name,"user_name")
+        password = request.user.password
+        print(password,"password")
+    resp = render(request, "index.html", context={"request": request, "user_data": user_data, "user_name":user_name})
     users = Users.objects.all()
     # print(users)
     # print(request.session)
@@ -30,8 +38,16 @@ def index(request):
 
 class ContactView(View):
     permission_required = "users.view_users"
-    def get(self, request):
-        return render(request, "contact.html")
+    def post(self, request):
+        if request.method == "POST":
+            user_name = request.POST.get('username')
+            password = request.POST.get('password')
+            hashed_pass=hash_password_bcrypt(password)
+            return render(request, "contact.html", context={"user_name":user_name, "password": hashed_pass})
+        else:
+            return render(request, "contact.html", context={"error":"Sorry please"})
+            
+
 
 
 # class MyView(LoginRequiredMixin, TemplateView):

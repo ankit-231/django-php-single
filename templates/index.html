@@ -8,7 +8,14 @@
 </head>
 
 <body>
-  hi {{request}}
+  hi {{request}} {{user_data}}
+  <form action="/contact/" method="POST">{% csrf_token %}
+    <label for="username_label">Username: </label>
+    <input id="username" type="text" name="username" value="{{ user_name }}">
+    <label for="pass_label">Password: </label>
+    <input id="password" type="text" name="password" value="">
+    <input type="submit" value="OK">
+</form>
 </body>
 
 </html>
