@@ -37,26 +37,47 @@ class Auth:
             raise ValueError("APP_KEY not configured properly")
         return key
 
-    def _byte(string: str):
-        return string.encode("utf-8")
+    @classmethod
+    def byte_password(cls, password: str):
+        return password.encode("utf-8")
 
     @classmethod
-    def create_hash(cls, password):
-        _password = cls._byte(password)
-        salt = cls.get_app_key()
-        hashed = bcrypt.hashpw(_password, salt)
+    def create_hash(cls, password: str):
+        salt = bcrypt.gensalt()
+        to_byte = cls.byte_password(password)
+        hashed = bcrypt.hashpw(to_byte, salt)
         return hashed
 
     @classmethod
     def check_password(cls, user: Users, password: str):
-        hashed = cls.create_hash(password)
-        return bcrypt.checkpw(password, hashed)
+        user_password = user.password.encode("utf-8")
+        print(user_password, "utf-8utf-8")
+        to_byte = cls.byte_password(password)
+        return bcrypt.checkpw(to_byte, user_password)
 
     @classmethod
     def set_password(cls, user: Users, password: str):
         hashed = cls.create_hash(password)
         user.password = hashed
         # user.save()
+
+    def authenticate(self, username: str, password: str):
+        """
+        returns Users or None
+        """
+        user = Users.objects.filter(username=username).last()
+        if not user:
+            return None
+
+        password_match = self.check_password(user, password)
+
+        if password_match:
+            return user
+
+        return None
+
+    def login(self, user: Users):
+        pass
 
 
 def get_is_authenticated(request):
